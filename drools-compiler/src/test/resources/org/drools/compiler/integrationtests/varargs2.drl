@@ -1,0 +1,26 @@
+package org.drools.compiler.test
+
+import org.drools.compiler.integrationtests.VarargsTest.MySet;
+
+global MySet set;
+
+rule default when
+then
+    set = new MySet( "x", "y" );
+    kcontext.getKnowledgeRuntime().setGlobal("set", set );
+    insert( set );
+end
+
+rule r1
+when
+    $ms: MySet()
+then
+    modify( $ms ){ add( "three", "four" ) }
+end
+
+rule r2 salience 1000
+when
+    $ms: MySet()
+then
+      modify( $ms ){ add( "z" ) }
+end
