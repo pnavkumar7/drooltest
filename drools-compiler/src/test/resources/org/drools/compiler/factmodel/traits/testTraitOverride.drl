@@ -1,0 +1,58 @@
+package org.drools.compiler.trait.test;
+
+import org.drools.core.factmodel.traits.Traitable;
+import org.drools.core.factmodel.traits.Entity;
+
+global java.util.List list;
+
+
+
+
+declare Imp
+    @Traitable
+    name    : String
+    code    : String
+end
+
+
+
+declare trait Person
+    @typesafe(false)
+    name    : String
+    code    : int
+end
+  
+
+
+ 
+
+ 
+ 
+rule "Init"
+when
+then
+    Imp core = new Imp( "adam", "code123" );
+    insert( core );
+end
+
+rule "Trait"
+no-loop
+when
+    $core: Imp( "adam", "code123" ;)
+then
+    Person<Imp> s = drools.<Person,Imp>don( $core, Person.class, true );
+    s.setCode( 456 );
+    System.out.println(s);
+    update(s);
+end
+
+
+rule "Cloak"
+when
+    $p    : Person( $c1 : code == 456, core.getClass() == Imp, $core : core.code == "code123" )
+then
+    list.add("OK");
+end
+
+
+

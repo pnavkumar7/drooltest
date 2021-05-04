@@ -1,0 +1,21 @@
+package org.drools.games.adventures
+
+//import org.drools.games.adventures.Room;
+//import org.drools.games.adventures.Thing;
+import org.drools.games.adventures.model.*;
+
+dialect "mvel"
+
+rule printEvent salience 10 when
+    $ge : GameEvent()
+    session : UserSession(  )
+then
+    session.channels["events"].send( $ge );
+end
+
+
+rule removeGameEvent when
+    $ge : GameEvent()
+then
+    retract ( $ge );
+end

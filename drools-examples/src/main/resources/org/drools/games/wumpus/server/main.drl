@@ -1,0 +1,33 @@
+package org.drools.games.wumpus;
+
+import org.drools.games.Run;
+import org.drools.games.wumpus.view.GameUI;
+
+dialect  "mvel"
+
+rule "main1" when
+then
+    insert( new Run() );
+    setFocus( "Init" );
+end
+
+rule "main2" when
+    $r : Run()
+then
+    setFocus( "PaintSensor" );
+    setFocus( "PaintCave" );
+    setFocus( "UpdateScore" );
+    setFocus( "Score" );
+    setFocus( "Sensor" );
+    setFocus( "Commands" );
+    setFocus( "Score" );
+    setFocus( "Sensor" );
+end
+
+rule "Redraw Cave" when
+   $gui : GameUI()
+   $r : Run()
+then
+   $gui.repaint();
+   modify( $r ) {}
+end

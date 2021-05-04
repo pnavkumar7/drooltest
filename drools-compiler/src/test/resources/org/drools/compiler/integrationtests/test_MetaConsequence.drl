@@ -1,0 +1,21 @@
+package org.drools.compiler.metatest;
+
+global java.util.List results;
+
+import org.drools.compiler.Person
+
+rule "Test Consequence"
+    @foo(bar)
+    @foo2(bar2)
+    @ruleID(1234)
+    @parentRuleID(1234)
+    @dateActive(12/1/08)
+    @price(123.00)
+    @errorMSG(Stop)
+    @userMSG("Please Stop")
+  when
+    Person(name == "Michael")
+  then
+    results.add( drools.getRule().getMetaAttribute("foo"));
+    results.add( drools.getRule().getMetaAttribute("foo2"));
+end
