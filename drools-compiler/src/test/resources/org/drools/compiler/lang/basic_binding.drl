@@ -1,0 +1,10 @@
+package org.drools.compiler.test;
+
+import org.drools.compiler.Cheese;
+
+rule "like cheddar"
+    when
+        Cheese( $type:type )
+    then
+        System.out.println("I like " + $type);
+end    

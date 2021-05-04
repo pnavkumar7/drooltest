@@ -1,0 +1,9 @@
+package org.drools.compiler
+
+import org.drools.compiler.StockTick;
+
+rule "Check event"
+when
+    StockTick( company == "ACME" )
+then
+end

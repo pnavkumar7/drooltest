@@ -1,0 +1,13 @@
+package org.drools.compiler.test;
+
+import org.drools.compiler.Cheese;
+
+rule "like cheddar"
+    when
+        Cheese( $type:type )
+    then
+        System.out.println("I like " + $type);
+        for (byte bt:$type.getBytes()) {
+            System.out.println("byte=" + bt);
+        }
+end 
