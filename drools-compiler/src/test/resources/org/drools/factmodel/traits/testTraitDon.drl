@@ -1,0 +1,103 @@
+package org.test;
+
+import org.drools.factmodel.traits.Entity;
+
+
+global java.util.List list;
+
+
+ 
+declare trait Parent
+    child   : Student
+end
+ 
+ 
+declare trait Person
+    name    : String 
+    age     : int   @position(0) 
+end
+  
+declare trait Role
+
+end
+ 
+
+declare trait Student extends Person, Role
+    school  : String
+end 
+ 
+ 
+declare Imp
+    @Traitable
+    name    : String    @key
+    school  : String
+end
+ 
+ 
+  
+declare java.lang.Object 
+    @Traitable
+end 
+ 
+ 
+declare java.lang.String 
+    @Traitable
+end 
+ 
+ 
+ 
+rule "Init"
+when 
+then 
+    Imp core = new Imp( "xx", "yy" );
+    insert( core );
+end
+
+//rule "Trait"
+//dialect "mvel"
+//when
+//    $core: Imp( "xx", "yy" ; )
+//    not String( this == "die" )
+//then
+//    Student s = drools.don( $core, Student, true );
+//    Imp core = (Imp) s.getCore();
+//
+//    s.name = "abc";
+//    s.age = 88;
+//    s.school = "skl";
+//
+//    update( s );
+//end
+
+rule "Trait"
+dialect "java"
+when
+    $core: Imp( "xx", "yy" ; )
+    not String( this == "die" )
+then
+    Student s = don( $core, Student.class, true );
+    Imp core = (Imp) s.getCore();
+
+    s.setAge( 88 );
+    s.setSchool( "skl" );
+
+    update( s );
+end
+ 
+rule "Check" 
+no-loop 
+when
+    $z: Student( $s : school == "skl", fields[ "name" ] == "xx", $a : age == 88 )
+then
+    list.add( "DON" );
+end 
+ 
+ 
+ 
+rule "Check2"
+salience -100 
+when
+    not Student( )
+then 
+    list.add( "SHED" );
+end;
