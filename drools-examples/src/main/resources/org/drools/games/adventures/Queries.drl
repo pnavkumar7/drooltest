@@ -1,0 +1,62 @@
+/*
+ * Copyright 2015 Red Hat, Inc. and/or its affiliates.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+*/
+
+package org.drools.games.adventures
+
+import java.util.List
+
+//import org.drools.games.adventures.Character
+//import org.drools.games.adventures.Room
+//import org.drools.games.adventures.Location
+import org.drools.games.adventures.model.*;
+import org.drools.games.adventures.UserSession;
+
+query connect( Door $d, Room $x, Room $y )
+    $d := Door($id, $name, $x, $y;)
+    or 
+    $d :=Door($id, $name, $y, $x;)
+end
+
+query isContainedIn( Thing $x, Thing $y ) 
+    Location($x, $y;)
+    or 
+    ( Location($z, $y;) and ?isContainedIn($x, $z;) )
+end
+
+query things(Character $char, List $things)
+    $char := Character()
+    Location( $char, $room; )
+    $things := List() from accumulate( Location($thing, $room; thing != $char),
+                                       collectList( $thing ) )      
+end
+
+query exits(Character $char, List $exits)
+    $char := Character()
+    Location( $char, $room; )
+    $exits := List() from accumulate( connect($door, $room, $exit;),
+                                      collectList( $exit ) )      
+end
+
+query look(Character $char, List $things, List $exits)
+   $char := Character()
+   things( $char, $things; )
+   exits( $char, $exits; )
+end
+
+query inventory(Character $char, List $inventory) 
+    $char := Character()    
+    $inventory := List() from accumulate( Holding( $char, $thing; ),
+                                          collectList( $thing ) )   
+end
